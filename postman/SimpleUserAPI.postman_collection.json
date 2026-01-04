@@ -1,0 +1,113 @@
+{
+  "info": {
+    "name": "Simple User API",
+    "_postman_id": "9e5b9a0e-1a0c-4e2f-9f20-0a1d3d5f1234",
+    "description": "Super simple collection to register, login, and call protected endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "adminUser", "value": "admin", "type": "string" },
+    { "key": "adminPass", "value": "admin123", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1) Register Single User",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"canManageUsers\": false\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2) Register 10 Users (JSON Array)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+        "body": {
+          "mode": "raw",
+          "raw": "[\n  {\n    \"username\": \"alice_smith\",\n    \"email\": \"alice@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"bob_jones\",\n    \"email\": \"bob@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"carol_wilson\",\n    \"email\": \"carol@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"david_brown\",\n    \"email\": \"david@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"eve_davis\",\n    \"email\": \"eve@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"frank_miller\",\n    \"email\": \"frank@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"grace_taylor\",\n    \"email\": \"grace@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"henry_anderson\",\n    \"email\": \"henry@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"ivy_thomas\",\n    \"email\": \"ivy@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  },\n  {\n    \"username\": \"jack_white\",\n    \"email\": \"jack@example.com\",\n    \"password\": \"password123\",\n    \"canManageUsers\": false\n  }\n]"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3) Login as Admin (Get Token)",
+      "event": [ { "listen": "test", "script": { "exec": [
+        "// Save the JWT token for use in other requests",
+        "pm.collectionVariables.set('token', pm.response.text());",
+        "pm.test('Token received', function () { pm.expect(pm.response.text().length).to.be.above(10); });"
+      ], "type": "text/javascript" } } ],
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+        "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+        "body": { "mode": "urlencoded", "urlencoded": [
+          { "key": "username", "value": "{{adminUser}}", "type": "text" },
+          { "key": "password", "value": "{{adminPass}}", "type": "text" }
+        ] }
+      },
+      "response": []
+    },
+    {
+      "name": "4) Get My Profile",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/me", "host": ["{{baseUrl}}"], "path": ["api", "me"] }
+      },
+      "response": []
+    },
+    {
+      "name": "5) List All Users (Admin Only)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+      },
+      "response": []
+    },
+    {
+      "name": "6) Get User by ID (Admin Only)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/users/2", "host": ["{{baseUrl}}"], "path": ["api", "users", "2"] }
+      },
+      "response": []
+    },
+    {
+      "name": "7) Grant Manage Permission (Admin Only)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "PUT",
+        "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+        "url": { "raw": "{{baseUrl}}/api/users/2/canManage?canManageUsers=true", "host": ["{{baseUrl}}"], "path": ["api", "users", "2", "canManage"] },
+        "body": { "mode": "urlencoded", "urlencoded": [
+          { "key": "canManageUsers", "value": "true", "type": "text" }
+        ] }
+      },
+      "response": []
+    },
+    {
+      "name": "8) Delete User (Admin Only)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+        "method": "DELETE",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/users/3", "host": ["{{baseUrl}}"], "path": ["api", "users", "3"] }
+      },
+      "response": []
+    }
+  ]
+}
