@@ -1,30 +1,47 @@
-name: Deploy to EC2
+name: Deploy to EC2   # Name of the GitHub Actions workflow (shown in Actions tab)
 
 on:
   push:
     branches:
-      - main
+      - main          # This workflow runs automatically whenever code is pushed to the main branch
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy:             # Job name (you can call it anything)
+    runs-on: ubuntu-latest   # GitHub provides a fresh Ubuntu machine to run this job
 
     steps:
+      # STEP 1: Download (clone) your GitHub repository code into the GitHub runner
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # STEP 2: Load your EC2 private SSH key from GitHub Secrets
+      # This allows GitHub Actions to securely connect to your EC2 server
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.repo_secret }}
+          ssh-private-key: ${{ secrets.repo_secret }}   # Private key stored securely in GitHub
 
+      # STEP 3: Connect to EC2 and deploy the application
       - name: Deploy to EC2
         run: |
+          # Connect to EC2 server using SSH
+          # StrictHostKeyChecking=no avoids manual confirmation during first connection
           ssh -o StrictHostKeyChecking=no ubuntu@13.53.173.3 << 'EOF'
-            cd ~/springboot_devops_demo_repo
-            git pull origin main
-            ./mvnw clean package
-            pkill -f 'java' || true
-            java -jar target/*.jar &
-          EOF
 
+            # Go to the project directory on EC2
+            cd ~/springboot_devops_demo_repo
+
+            # Pull the latest code from GitHub main branch
+            git pull origin main
+
+            # Build the Spring Boot application using Maven Wrapper
+            ./mvnw clean package
+
+            # Stop any previously running Java application (if exists)
+            # '|| true' prevents pipeline failure if no Java process is running
+            pkill -f 'java' || true
+
+            # Start the new Spring Boot application in background
+            java -jar target/*.jar &
+
+          EOF
