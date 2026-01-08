@@ -26,7 +26,7 @@ jobs:
         run: |
           # Connect to EC2 server using SSH
           # StrictHostKeyChecking=no avoids manual confirmation during first connection
-          ssh -o StrictHostKeyChecking=no ubuntu@13.53.173.3 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@13.61.189.226 << 'EOF'
 
             # Go to the project directory on EC2
             cd ~/springboot_devops_demo_repo
