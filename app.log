@@ -317,3 +317,6 @@ Caused by: org.postgresql.util.PSQLException: ERROR: must be owner of table proj
 2026-01-07 11:18:43.860  INFO 21146 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2026-01-07 11:18:43.862  INFO 21146 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
 2026-01-07 11:18:48.065  INFO 21146 --- [io-8080-exec-10] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 422 ms
+2026-01-07 18:54:55.914  INFO 21146 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-07 18:54:55.917  INFO 21146 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-01-07 18:54:55.946  INFO 21146 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
